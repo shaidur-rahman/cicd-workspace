@@ -1,3 +1,10 @@
+#!/bin/bash
+
+# ANSI escape codes for colors
+CYAN="\e[1;36m"
+RED="\033[38;2;255;0;0m"
+RESET="\e[0m"
+
 dirc=/home/shaidur/git
 
 cd "$dirc"
@@ -5,16 +12,24 @@ projects=("netcourier-parent" "metafour-cloud" "metafour-auth" "netcourier-model
 
 for d in "${projects[@]}"; do
     cd "$d"
-    echo $"..............$d ............."
+    echo $"..............${RED}$d${RESET} ............."
 	
-	git checkout NC-5414
+	git checkout nc-release-8-48
 
 	#git fetch upstream nc-release-10
 #	git fetch upstream nc-release-8-48
 #	git fetch upstream nc-release-8-48
 #	git fetch upstream
 
-	git rebase upstream/master
+#	git rebase upstream/master
+	if ! git rebase upstream/master; then
+        echo -e "${RED}Rebase failed for $d. Skipping push.${RESET}"
+        echo "--------------------------------"
+        echo ""
+        echo ""
+        cd ../
+        continue
+    fi
 
 #	git reset --hard upstream/nc-release-8-49
 
