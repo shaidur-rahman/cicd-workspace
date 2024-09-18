@@ -61,11 +61,19 @@ for d in "${projects[@]}"; do
 
     # Checkout the specified local branch
     git fetch upstream "$upstream_branch"
-    git checkout "$local_branch"
+
+    if ! git checkout "$local_branch"; then
+        echo -e "${RED}Checkout failed for $local_branch. Skipping REBASE and PUSH.${RESET}"
+        echo "--------------------------------"
+        echo ""
+        echo ""
+        cd ../
+        continue
+    fi
     
     # Rebase with the specified upstream branch
     if ! git rebase "upstream/$upstream_branch"; then
-        echo -e "${RED}Rebase failed for upstream/$upstream_branch. Skipping push.${RESET}"
+        echo -e "${RED}Rebase failed for upstream/$upstream_branch. Skipping PUSH.${RESET}"
         echo "--------------------------------"
         echo ""
         echo ""
